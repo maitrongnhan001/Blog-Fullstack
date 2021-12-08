@@ -3102,12 +3102,6 @@ width: 40px;
 .center_button{
 margin-top: 10px;
 }
-
-.router-link-exact-active {
-  color: #0099ff !important;
-  border-right: 2px solidn #0099ff !important;
-  background-color: #eaeeea;
-}
 /*!
  * Bootstrap v4.1.1 (https://getbootstrap.com/)
  * Copyright 2011-2018 The Bootstrap Authors
