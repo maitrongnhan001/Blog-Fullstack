@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +22,7 @@ Route::get('/', function () {
 Route::any('/{slug}', function () {
     return view('welcome');
 });
+
+Route::post('app/create_tag', [AdminController::class, 'addTag']);
+
+Route::get('app/get_tags', [AdminController::class, 'getTags']);
