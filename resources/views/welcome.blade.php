@@ -6,6 +6,16 @@
 
         <title>Blog</title>
         <link rel="stylesheet" href="{{ URL::asset('css/all.css') }}">
+
+        <script>
+            (
+                function () {
+                    window.Laravel = {
+                        csrfToken: '{{ csrf_token() }}'
+                    };
+                }
+            )();
+        </script>
        
 
     </head>

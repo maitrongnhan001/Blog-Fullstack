@@ -49,4 +49,10 @@ class AdminController extends Controller
 
         return $edit;
     }
+
+    public function upload (Request $request) {
+        $imageName = time().'.'.$request->file->extension();
+        $request->file->move(public_path('upload'), $imageName);
+        return $imageName;
+    }
 }
