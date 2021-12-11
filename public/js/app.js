@@ -5672,6 +5672,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5859,36 +5863,72 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         title: 'Exceeding file size limit',
         desc: 'File  ' + file.name + ' is too large, no more than 2M.'
       });
+    },
+    deleteImage: function deleteImage() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+        var Image, res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                Image = _this4.data.iconImage;
+
+                _this4.$refs.uploads.clearFiles();
+
+                _this4.data.iconImage = '';
+                _context4.next = 5;
+                return _this4.callApi('POST', 'app/delete_image', {
+                  imageName: Image
+                });
+
+              case 5:
+                res = _context4.sent;
+
+                if (res.status != 200) {
+                  _this4.data.iconImage = image;
+
+                  _this4.swr();
+                }
+
+              case 7:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
     }
   },
   created: function created() {
-    var _this4 = this;
+    var _this5 = this;
 
-    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
       var res;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
-              _this4.token = window.Laravel.csrfToken;
-              _context4.next = 3;
-              return _this4.callApi('GET', 'app/get_tags');
+              _this5.token = window.Laravel.csrfToken;
+              _context5.next = 3;
+              return _this5.callApi('GET', 'app/get_tags');
 
             case 3:
-              res = _context4.sent;
+              res = _context5.sent;
 
               if (res.status === 200) {
-                _this4.tags = res.data;
+                _this5.tags = res.data;
               } else {
-                _this4.swr();
+                _this5.swr();
               }
 
             case 5:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
         }
-      }, _callee4);
+      }, _callee5);
     }))();
   }
 });
@@ -76765,6 +76805,7 @@ var render = function () {
               _c(
                 "Upload",
                 {
+                  ref: "uploads",
                   attrs: {
                     type: "drag",
                     action: "app/upload",
@@ -76798,10 +76839,26 @@ var render = function () {
               ),
               _vm._v(" "),
               _vm.data.iconImage
-                ? _c("div", [
+                ? _c("div", { staticClass: "demo-upload-list" }, [
                     _c("img", {
                       attrs: { src: "/upload/" + _vm.data.iconImage },
                     }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "demo-upload-list-cover" },
+                      [
+                        _c(
+                          "Icon",
+                          {
+                            attrs: { type: "ios-trash-outline" },
+                            on: { click: _vm.deleteImage },
+                          },
+                          [_vm._v("Delete Image")]
+                        ),
+                      ],
+                      1
+                    ),
                   ])
                 : _vm._e(),
               _vm._v(" "),
