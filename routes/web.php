@@ -32,3 +32,5 @@ Route::post('app/edit_tag', [AdminController::class, 'editTag']);
 Route::post('app/delete_tag', [AdminController::class, 'deleteTag']);
 
 Route::post('app/upload', [AdminController::class, 'upload']);
+
+Route::post('app/delete_image', [AdminController::class, 'deleteImage']);

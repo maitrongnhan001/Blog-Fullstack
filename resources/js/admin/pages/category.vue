@@ -45,6 +45,7 @@
                     <br/>
                     <br/>
                     <Upload
+						ref='uploads'
                         type="drag"
                         action="app/upload"
                         :headers="{'x-csrf-token': token, 'X-Requested-With': 'XMLHttpRequest'}"
@@ -61,8 +62,11 @@
                         </div>
                     </Upload>
 
-					<div v-if='data.iconImage'>
+					<div class='demo-upload-list' v-if='data.iconImage'>
 						<img :src='`/upload/${data.iconImage}`' />
+						<div class='demo-upload-list-cover'>
+							<Icon type='ios-trash-outline' @click='deleteImage'>Delete Image</Icon>
+						</div>
 					</div>
 
 					<div slot='footer'>
@@ -211,9 +215,22 @@ export default {
                 title: 'Exceeding file size limit',
                 desc: 'File  ' + file.name + ' is too large, no more than 2M.'
             });
-        }
+        },
+		async deleteImage () {
+			let Image = this.data.iconImage;
+
+			this.$refs.uploads.clearFiles();
+
+			this.data.iconImage = '';
+			const res = await this.callApi('POST', 'app/delete_image', {imageName: Image});
+
+			if (res.status != 200) {
+				this.data.iconImage = image;
+				this.swr();
+			}
+		}
 	},
-	async created() {
+	async created () {
         this.token = window.Laravel.csrfToken;
 		const res = await this.callApi('GET', 'app/get_tags');
 		if (res.status === 200) {
@@ -221,7 +238,7 @@ export default {
 		} else {
 			this.swr(); 
 		}
-	},
+	}
 }
 </script>
 <style lang="">
