@@ -101,7 +101,8 @@ export default {
 			index: -1,
 			showDeleteModal: false,
 			deleteItem: {},
-			indexDelete: -1
+			indexDelete: -1,
+			websiteSettings: []
 		}
 	},
 	methods: {

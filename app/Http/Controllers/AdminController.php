@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Tag;
 use Facade\FlareClient\Http\Response;
+use GrahamCampbell\ResultType\Result;
 
 class AdminController extends Controller
 {
@@ -68,9 +70,48 @@ class AdminController extends Controller
 
     public function deleteFileFromServer ($fileName) {
         $filePath = public_path().'/upload/'.$fileName;
+        echo $filePath;
         if (file_exists($filePath)) {
             @unlink($filePath);
+        } else {
+            $filePath = public_path().$fileName;
+            if (file_exists($filePath)) {
+                @unlink($filePath);
+            }
         }
         return;
+    }
+
+    public function getCategories () {
+        $data = Category::orderBy('id', 'desc')->get();
+        return $data;
+    }
+
+    public function addCategory (Request $request) {
+        $this->validate($request, [
+            'categoryName' => 'required',
+            'iconImage' => 'required'
+        ]);
+
+        $create = Category::create([
+            'categoryName' => $request->categoryName,
+            'iconImage' => $request->iconImage
+        ]);
+
+        return $create;
+    }
+
+    public function editCategory (Request $request) {
+        $this->validate($request, [
+            'categoryName' => 'required',
+            'iconImage' => 'required'
+        ]);
+
+        $edit = Category::where('id',$request->id)->update([
+            'categoryName' => $request->categoryName,
+            'iconImage' => $request->iconImage
+        ]);
+
+        return $edit;
     }
 }

@@ -34,3 +34,9 @@ Route::post('app/delete_tag', [AdminController::class, 'deleteTag']);
 Route::post('app/upload', [AdminController::class, 'upload']);
 
 Route::post('app/delete_image', [AdminController::class, 'deleteImage']);
+
+Route::get('app/get_categories', [AdminController::class, 'getCategories']);
+
+Route::post('app/create_category', [AdminController::class, 'addCategory']);
+
+Route::post('app/edit_category', [AdminController::class, 'editCategory']);
