@@ -10,9 +10,14 @@
       </div>
       <div slot="footer">
         <Button
+          type="default"
+          size="large"
+          @click="closeModal()"
+          >Close</Button
+        >
+        <Button
           type="error"
           size="large"
-          long
           :loading="isDeleting"
           :disabled="isDeleting"
           @click="deleteTag()"
@@ -32,17 +37,28 @@ export default {
     },
     methods: {
         async deleteTag () {
-			this.isDeleting = true;
-			const res = await this.callApi('POST', this.getDeleteModalObj.deleteUrl, this.getDeleteModalObj.data);
-			if (res.status === 200) {
-			    this.success('Tag has been deleted successfully!');
-                this.$store.commit('setDeletedModal', true);
-			} else {
-				this.swr();
-                this.$store.commit('setDeletedModal', false);
-			} 
-			this.isDeleting = false;
-		},
+          this.isDeleting = true;
+          const res = await this.callApi('POST', this.getDeleteModalObj.deleteUrl, this.getDeleteModalObj.data);
+          if (res.status === 200) {
+              this.success('Tag has been deleted successfully!');
+                    this.$store.commit('setDeletedModal', true);
+          } else {
+            this.swr();
+                    this.$store.commit('setDeletedModal', false);
+          } 
+          this.isDeleting = false;
+        },
+        closeModal () {
+          const deleteModalObj = {
+            title: '',
+            showDeleteModal: false,
+            deleteUrl: '',
+            data: null,
+            isDeleted: false
+          }
+
+          this.$store.commit('setDeletingModalObj', deleteModalObj);
+        }
     },
     computed: {
         ...mapGetters(['getDeleteModalObj'])

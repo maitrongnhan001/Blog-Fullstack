@@ -247,18 +247,6 @@ export default {
 			this.editModal = true;
 			this.isEditing = true;
 		},
-		async deleteTag () {
-			this.isDeleting = true;
-			const res = await this.callApi('POST', 'app/delete_tag', this.deleteItem);
-			if (res.status === 200) {
-				this.tags.splice(this.indexDelete, 1);
-				this.success('Tag has been deleted successfully!');
-			} else {
-				this.swr();
-			}
-			this.showDeletingModal = false;
-			this.isDeleting = false;
-		},
 		showDeletingModal (category, index) {
 			const deleteModalObj = {
 				title: 'category',
