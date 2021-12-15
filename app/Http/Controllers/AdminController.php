@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Tag;
+use App\Models\User;
 use Facade\FlareClient\Http\Response;
 use GrahamCampbell\ResultType\Result;
 
@@ -127,4 +128,30 @@ class AdminController extends Controller
 
         return $delete;
     }
+
+    public function getUsers () {
+        $data = User::where('userType', '!=','User')->get([
+            'fullName', 'email', 'userType', 'created_at'
+        ]);
+        return $data;
+    }
+
+    public function createUser (Request $request) {
+        $this->validate($request, [
+            'fullName' => 'required',
+            'email' => 'bail|required|email',
+            'password' => 'bail|required|min:6',
+            'userType' => 'required'
+        ]);
+
+        $password = bcrypt($request->password);
+        $user = User::create([
+            'fullName' => $request->fullName,
+            'email' => $request->email,
+            'password' => $password,
+            'userType' => $request->userType
+        ]);
+        return $user;
+    }
+
 }
