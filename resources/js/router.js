@@ -5,6 +5,7 @@ import home from './components/Pages/home.vue';
 import tags from './admin/Pages/tags.vue';
 import category from './admin/pages/category.vue';
 import adminUsers from './admin/pages/adminusers.vue';
+import login from './admin/pages/login.vue';
 
 Vue.use(Router); 
 
@@ -12,6 +13,10 @@ const routes = [
     {
         path: '/',
         component: home
+    },
+    {
+        path: '/login',
+        component: login
     },
     {
         path: '/tags',

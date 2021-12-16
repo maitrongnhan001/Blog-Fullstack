@@ -8,6 +8,7 @@ use App\Models\Tag;
 use App\Models\User;
 use Facade\FlareClient\Http\Response;
 use GrahamCampbell\ResultType\Result;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -185,5 +186,22 @@ class AdminController extends Controller
 
         $delete = User::where('id', $request->id)->delete();
         return $delete;
+    }
+
+    public function adminLogin (Request $request) {
+        $this->validate($request, [
+            'email' => 'bail|required|email',
+            'password' => 'bail|required'
+        ]);
+
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            return response()->json([
+                'msg' => 'You were login in'
+            ]);
+        } else {
+            return response()->json([
+                'msg' => 'You were login false'
+            ], 401);
+        }
     }
 }
