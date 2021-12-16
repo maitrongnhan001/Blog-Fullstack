@@ -131,7 +131,7 @@ class AdminController extends Controller
 
     public function getUsers () {
         $data = User::where('userType', '!=','User')->get([
-            'fullName', 'email', 'userType', 'created_at'
+            'id', 'fullName', 'email', 'userType', 'created_at'
         ]);
         return $data;
     }
@@ -139,7 +139,7 @@ class AdminController extends Controller
     public function createUser (Request $request) {
         $this->validate($request, [
             'fullName' => 'required',
-            'email' => 'bail|required|email',
+            'email' => 'bail|required|email|unique:users',
             'password' => 'bail|required|min:6',
             'userType' => 'required'
         ]);
@@ -154,4 +154,36 @@ class AdminController extends Controller
         return $user;
     }
 
+    public function editUser (Request $request) {
+        $this->validate($request, [
+            'fullName' => 'required',
+            'email' => "bail|required|email|unique:users,email,".$request->id,
+            'password' => 'min:6',
+            'userType' => 'required'
+        ]);
+
+        $data = [
+            'fullName' => $request->fullName,
+            'email' => $request->email,
+            'userType' => $request->userType
+        ];
+
+        if ($request->password) {
+            $password = bcrypt($request->password);
+            $data['password'] = $password;
+        }
+
+        $edit = User::where('id', $request->id)->update($data);
+
+        return $edit;
+    }
+
+    public function deleteUser (Request $request) {
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        $delete = User::where('id', $request->id)->delete();
+        return $delete;
+    }
 }

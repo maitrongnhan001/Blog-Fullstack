@@ -5819,6 +5819,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -5881,7 +5894,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 res = _context.sent;
 
                 if (res.status === 201) {
-                  _this.tags.unshift(res.data);
+                  _this.users.unshift(res.data);
 
                   _this.success('Admin has been added successfully!');
 
@@ -5910,46 +5923,58 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    editTag: function editTag() {
+    editAdmin: function editAdmin() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var res;
+        var res, index;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                if (!(_this2.editData.tagName.trim() == '')) {
-                  _context2.next = 2;
+                if (_this2.editData.fullName.trim() == '') _this2.error('Admin name is required');
+
+                if (!(_this2.editData.email.trim() == '')) {
+                  _context2.next = 3;
                   break;
                 }
 
-                return _context2.abrupt("return", _this2.error('Tag name is required'));
+                return _context2.abrupt("return", _this2.error('Email is required'));
 
-              case 2:
-                _context2.next = 4;
-                return _this2.callApi('POST', 'app/edit_tag', _this2.editData);
+              case 3:
+                if (!(_this2.editData.userType.trim() == '')) {
+                  _context2.next = 5;
+                  break;
+                }
 
-              case 4:
+                return _context2.abrupt("return", _this2.error('Type admin is required'));
+
+              case 5:
+                _context2.next = 7;
+                return _this2.callApi('POST', 'app/edit_user', _this2.editData);
+
+              case 7:
                 res = _context2.sent;
 
                 if (res.status === 200) {
-                  _this2.tags[_this2.index].tagName = _this2.editData.tagName;
+                  _this2.users[_this2.index] = _this2.editData;
 
-                  _this2.success('Tag has been edited successfully!');
+                  _this2.success('Admin has been edited successfully!');
 
                   _this2.editModal = false;
                 } else {
                   if (res.status === 422) {
-                    if (res.data.errors.tagName) {
-                      _this2.i(res.data.errors.tagName[0]);
+                    for (index in res.data.errors) {
+                      _this2.error(res.data.errors[index][0]);
                     }
+
+                    ;
                   } else {
                     _this2.swr();
                   }
                 }
 
-              case 6:
+              case 9:
               case "end":
                 return _context2.stop();
             }
@@ -5957,10 +5982,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
-    showEditModal: function showEditModal(tag, index) {
+    showEditModal: function showEditModal(user, index) {
       var obj = {
-        id: tag.id,
-        tagName: tag.tagName
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
+        userType: user.userType
       };
       this.index = index;
       this.editData = obj;
@@ -6001,12 +6028,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3);
       }))();
     },
-    showDeletingModal: function showDeletingModal(tag, index) {
+    showDeletingModal: function showDeletingModal(admin, index) {
       var deleteModalObj = {
-        title: 'tag',
+        title: 'admin',
         showDeleteModal: true,
-        deleteUrl: 'app/delete_tag',
-        data: tag,
+        deleteUrl: 'app/delete_user',
+        data: admin,
         isDeleted: false
       };
       this.$store.commit('setDeletingModalObj', deleteModalObj); // this.deleteItem = tag;
@@ -6050,7 +6077,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   watch: {
     getDeleteModalObj: function getDeleteModalObj(obj) {
       if (obj.isDeleted) {
-        this.tags.splice(this.indexDelete, 1);
+        this.users.splice(this.indexDelete, 1);
       }
     }
   }
@@ -77634,7 +77661,7 @@ var render = function () {
             "Modal",
             {
               attrs: {
-                title: "Add tag",
+                title: "Add admin",
                 "mask-closable": false,
                 closable: false,
               },
@@ -77751,7 +77778,7 @@ var render = function () {
             "Modal",
             {
               attrs: {
-                title: "Edit tag",
+                title: "Edit admin",
                 "mask-closable": false,
                 closable: false,
               },
@@ -77764,17 +77791,71 @@ var render = function () {
               },
             },
             [
-              _vm._v("\n\t\t\t\t\tTag name: \n\t\t\t\t\t"),
+              _vm._v(
+                "\n\t\t\t\t\tTag name: \n\t\t\t\t\tAdmin name: \n\t\t\t\t\t"
+              ),
               _c("Input", {
-                attrs: { placeholder: "Enter tag name..." },
+                attrs: { type: "text", placeholder: "Enter admin name..." },
                 model: {
-                  value: _vm.editData.tagName,
+                  value: _vm.editData.fullName,
                   callback: function ($$v) {
-                    _vm.$set(_vm.editData, "tagName", $$v)
+                    _vm.$set(_vm.editData, "fullName", $$v)
                   },
-                  expression: "editData.tagName",
+                  expression: "editData.fullName",
                 },
               }),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v("\n                    Email:\n                    "),
+              _c("Input", {
+                attrs: { type: "email", placeholder: "Enter email..." },
+                model: {
+                  value: _vm.editData.email,
+                  callback: function ($$v) {
+                    _vm.$set(_vm.editData, "email", $$v)
+                  },
+                  expression: "editData.email",
+                },
+              }),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v("\n                    Password:\n                    "),
+              _c("Input", {
+                attrs: { type: "password", placeholder: "Enter password..." },
+                model: {
+                  value: _vm.editData.password,
+                  callback: function ($$v) {
+                    _vm.$set(_vm.editData, "password", $$v)
+                  },
+                  expression: "editData.password",
+                },
+              }),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v("\n                    User type:\n                    "),
+              _c(
+                "Select",
+                {
+                  attrs: { placeholder: "Chooese user type" },
+                  model: {
+                    value: _vm.editData.userType,
+                    callback: function ($$v) {
+                      _vm.$set(_vm.editData, "userType", $$v)
+                    },
+                    expression: "editData.userType",
+                  },
+                },
+                [
+                  _c("Option", { attrs: { value: "admin" } }, [
+                    _vm._v("Admin"),
+                  ]),
+                  _vm._v(" "),
+                  _c("Option", { attrs: { value: "editor" } }, [
+                    _vm._v("Editor"),
+                  ]),
+                ],
+                1
+              ),
               _vm._v(" "),
               _c(
                 "div",
@@ -77801,9 +77882,9 @@ var render = function () {
                         disabled: _vm.isAdding,
                         loading: _vm.isAdding,
                       },
-                      on: { click: _vm.editTag },
+                      on: { click: _vm.editAdmin },
                     },
-                    [_vm._v(_vm._s(_vm.isAdding ? "Editing..." : "Edit tag"))]
+                    [_vm._v(_vm._s(_vm.isAdding ? "Editing..." : "Edit Admin"))]
                   ),
                 ],
                 1

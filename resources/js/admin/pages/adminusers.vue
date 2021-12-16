@@ -40,7 +40,7 @@
 
 				<Modal
 					v-model='addModal'
-					title='Add tag'
+					title='Add admin'
 					:mask-closable = 'false'
 					:closable= 'false'
 				>
@@ -67,16 +67,29 @@
 
 				<Modal
 					v-model='editModal'
-					title='Edit tag'
+					title='Edit admin'
 					:mask-closable = 'false'
 					:closable= 'false'
 				>
 					Tag name: 
-					<Input v-model="editData.tagName" placeholder="Enter tag name..." />
+					Admin name: 
+					<Input type='text' v-model="editData.fullName" placeholder="Enter admin name..." />
+                    <br/>
+                    Email:
+                    <Input type='email' v-model="editData.email" placeholder="Enter email..." />
+                    <br/>
+                    Password:
+                    <Input type='password' v-model="editData.password" placeholder="Enter password..." />
+                    <br/>
+                    User type:
+                    <Select v-model="editData.userType" placeholder='Chooese user type'>
+                        <Option value="admin">Admin</Option>
+                        <Option value="editor">Editor</Option>
+                    </Select>
 
 					<div slot='footer'>
 						<Button type='default' @click="editModal=false" >Close</Button>
-						<Button type='primary' @click='editTag' :disabled='isAdding' :loading='isAdding'>{{ isAdding ? 'Editing...' : 'Edit tag' }}</Button>
+						<Button type='primary' @click='editAdmin' :disabled='isAdding' :loading='isAdding'>{{ isAdding ? 'Editing...' : 'Edit Admin' }}</Button>
 					</div>
 
 				</Modal>
@@ -134,7 +147,7 @@ export default {
             if (this.data.userType.trim() == '') return  this.error('Type admin is required');
 			const res = await this.callApi('POST', 'app/create_user', this.data);
 			if (res.status === 201) {
-				this.tags.unshift(res.data);
+				this.users.unshift(res.data);
 				this.success('Admin has been added successfully!');
 				this.addModal = false;
 				this.data.fullName = '';
@@ -151,27 +164,31 @@ export default {
 				}
 			}
 		},
-		async editTag () {
-			if (this.editData.tagName.trim() == '') return  this.error('Tag name is required');
-			const res = await this.callApi('POST', 'app/edit_tag', this.editData);
+		async editAdmin () {
+			if (this.editData.fullName.trim() == '')  this.error('Admin name is required');
+            if (this.editData.email.trim() == '') return this.error('Email is required');
+            if (this.editData.userType.trim() == '') return  this.error('Type admin is required');
+			const res = await this.callApi('POST', 'app/edit_user', this.editData);
 			if (res.status === 200) {
-				this.tags[this.index].tagName = this.editData.tagName; 
-				this.success('Tag has been edited successfully!');
+				this.users[this.index] = this.editData; 
+				this.success('Admin has been edited successfully!');
 				this.editModal = false;
 			} else {
 				if (res.status === 422) {
-					if (res.data.errors.tagName) {
-						this.i(res.data.errors.tagName[0]);
-					}
+                    for (let index in res.data.errors) {
+                        this.error(res.data.errors[index][0]);
+                    };
 				} else {
 					this.swr();
 				}
 			}
 		},
-		showEditModal (tag, index) {
+		showEditModal (user, index) {
 			let obj = {
-				id: tag.id,
-				tagName: tag.tagName
+				id: user.id,
+				fullName: user.fullName,
+				email: user.email,
+				userType: user.userType
 			}
 
 			this.index = index;
@@ -190,12 +207,12 @@ export default {
 			this.showDeletingModal = false;
 			this.isDeleting = false;
 		},
-		showDeletingModal (tag, index) {
+		showDeletingModal (admin, index) {
 			const deleteModalObj = {
-				title: 'tag',
+				title: 'admin',
 				showDeleteModal: true,
-				deleteUrl: 'app/delete_tag',
-				data: tag,
+				deleteUrl: 'app/delete_user',
+				data: admin,
 				isDeleted: false
 			}
 
@@ -223,7 +240,7 @@ export default {
 	watch: {
 		getDeleteModalObj(obj) {
 			if (obj.isDeleted) {
-				this.tags.splice(this.indexDelete, 1);
+				this.users.splice(this.indexDelete, 1);
 			}
 		}
 	}
