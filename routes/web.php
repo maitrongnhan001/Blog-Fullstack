@@ -15,13 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [AdminController::class, 'index']);
 
-Route::any('/{slug}', function () {
-    return view('welcome');
-});
+Route::get('/logout', [AdminController::class, 'logout']);
+
+Route::any('/{slug}', [AdminController::class, 'index']);
 
 Route::get('app/get_tags', [AdminController::class, 'getTags']);
 

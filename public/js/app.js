@@ -6666,6 +6666,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this.isLogging = true;
 
                 if (res.status === 200) {
+                  window.location = '/';
+
                   _this.success(res.data.msg);
                 } else {
                   if (res.status === 401) {
@@ -6942,11 +6944,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ["user"],
   data: function data() {
     return {
-      isLoggedIn: true
+      isLoggedIn: false
     };
+  },
+  created: function created() {
+    this.$store.commit('updateUser', this.user);
   }
 });
 
@@ -7159,7 +7170,8 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_1_
       deleteUrl: '',
       data: null,
       isDeleted: false
-    }
+    },
+    user: false
   },
   getters: {
     getDeleteModalObj: function getDeleteModalObj(state) {
@@ -7179,6 +7191,9 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_1_
     },
     setDeletingModalObj: function setDeletingModalObj(state, data) {
       state.deleteModalObj = data;
+    },
+    updateUser: function updateUser(state, data) {
+      state.user = data;
     }
   }
 }));
@@ -79322,7 +79337,7 @@ var render = function () {
   return _c(
     "div",
     [
-      _vm.isLoggedIn
+      _vm.$store.state.user
         ? _c("div", [
             _c("div", { staticClass: "_1side_menu" }, [
               _vm._m(0),
@@ -79395,6 +79410,18 @@ var render = function () {
                       ],
                       1
                     ),
+                    _vm._v(" "),
+                    _c("li", [
+                      _c(
+                        "a",
+                        { attrs: { href: "/logout" } },
+                        [
+                          _c("Icon", { attrs: { type: "ios-speedometer" } }),
+                          _vm._v(" Logout"),
+                        ],
+                        1
+                      ),
+                    ]),
                   ]),
                 ]),
               ]),

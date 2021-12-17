@@ -10,7 +10,8 @@ export default new vuex.Store({
             deleteUrl: '',
             data: null,
             isDeleted: false
-        }
+        },
+        user: false
     },
     getters: {
         getDeleteModalObj (state) {
@@ -30,6 +31,9 @@ export default new vuex.Store({
         },
         setDeletingModalObj (state, data) {
             state.deleteModalObj = data; 
+        },
+        updateUser (state, data) {
+            state.user = data;
         }
     }
 });

@@ -13,6 +13,27 @@ use Illuminate\Support\Facades\Auth;
 class AdminController extends Controller
 {
 
+    public function index (Request $request) {
+        if (!Auth::check()) {
+            if ($request->path() != 'login') {
+                return redirect('/login');
+            }
+
+            return view('welcome');
+        }
+
+        $user = Auth::user();
+        if ($user->userType == 'User') {
+            return redirect('/login');
+        }
+
+        if ($request->path() == 'login') {
+            return redirect('/');
+        }
+
+        return view('welcome');
+    }
+
     public function getTags () {
         $data = Tag::orderBy('id', 'desc')->get();
         return $data;
@@ -195,13 +216,28 @@ class AdminController extends Controller
         ]);
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::user();
+            if ($user->userType == 'User') {
+                Auth::logout();
+
+                return response()->json([
+                    'msg' => 'Incorrect login details'
+                ], 401);
+            }
+            
             return response()->json([
-                'msg' => 'You were login in'
+                'msg' => 'You were login in',
+                'user' => $user
             ]);
         } else {
             return response()->json([
-                'msg' => 'You were login false'
+                'msg' => 'Incorrect login details'
             ], 401);
         }
+    }
+
+    public function logout () {
+        Auth::logout();
+        return redirect('/login');
     }
 }
