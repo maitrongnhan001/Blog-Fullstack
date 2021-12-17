@@ -67,7 +67,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 ._1adminOverveiw_table_recent {
   margin: 0 auto;
   margin-top: 30vh;
