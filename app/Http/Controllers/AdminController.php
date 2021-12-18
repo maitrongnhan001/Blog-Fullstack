@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Models\Tag;
 use App\Models\User;
@@ -239,5 +240,34 @@ class AdminController extends Controller
     public function logout () {
         Auth::logout();
         return redirect('/login');
+    }
+
+    public function getRoles () {
+        $data = Role::orderBy('id', 'desc')->get();
+        return $data;
+    }
+
+    public function createRole (Request $request) {
+        $this->validate($request, [
+            'roleName' => 'required'
+        ]);
+
+        $role = Role::create([
+            'roleName' => $request->roleName
+        ]);
+
+        return $role;
+    }
+
+    public function editRole (Request $request) {
+        $this->validate($request, [
+            'roleName' => 'required'
+        ]);
+
+        $edit = Role::where('id', $request->id)->update([
+            'roleName' => $request->roleName
+        ]);
+
+        return $edit;
     }
 }

@@ -52,4 +52,10 @@ Route::group(['prefix' =>'app', 'middleware' => [AdminCheck::class]] ,function (
     Route::post('/delete_user', [AdminController::class, 'deleteUser']);
 
     Route::post('/admin_login', [AdminController::class, 'adminLogin']);
+
+    Route::get('/get_roles', [AdminController::class, 'getRoles']);
+
+    Route::post('/create_role', [AdminController::class, 'createRole']);
+
+    Route::post('/edit_role', [AdminController::class, 'editRole']);
 });
