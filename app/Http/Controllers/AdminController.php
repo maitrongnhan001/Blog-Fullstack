@@ -153,8 +153,8 @@ class AdminController extends Controller
     }
 
     public function getUsers () {
-        $data = User::where('userType', '!=','User')->get([
-            'id', 'fullName', 'email', 'userType', 'created_at'
+        $data = User::where('role_id', '!=', 0)->get([
+            'id', 'fullName', 'email', 'role_id', 'created_at'
         ]);
         return $data;
     }
@@ -164,7 +164,7 @@ class AdminController extends Controller
             'fullName' => 'required',
             'email' => 'bail|required|email|unique:users',
             'password' => 'bail|required|min:6',
-            'userType' => 'required'
+            'role_id' => 'required'
         ]);
 
         $password = bcrypt($request->password);
@@ -172,7 +172,7 @@ class AdminController extends Controller
             'fullName' => $request->fullName,
             'email' => $request->email,
             'password' => $password,
-            'userType' => $request->userType
+            'role_id' => $request->role_id
         ]);
         return $user;
     }
@@ -182,13 +182,13 @@ class AdminController extends Controller
             'fullName' => 'required',
             'email' => "bail|required|email|unique:users,email,".$request->id,
             'password' => 'min:6',
-            'userType' => 'required'
+            'role_id' => 'required'
         ]);
 
         $data = [
             'fullName' => $request->fullName,
             'email' => $request->email,
-            'userType' => $request->userType
+            'role_id' => $request->role_id
         ];
 
         if ($request->password) {
@@ -218,7 +218,7 @@ class AdminController extends Controller
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-            if ($user->userType == 'User') {
+            if ($user->role->isAdmin == 0) {
                 Auth::logout();
 
                 return response()->json([

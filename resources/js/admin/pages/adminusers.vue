@@ -26,7 +26,7 @@
 								<td>{{ user.id }}</td>
 								<td class="_table_name">{{ user.fullName }}</td>
 								<td>{{ user.email }}</td>
-                                <td>{{ user.userType }}</td>
+                                <td>{{ userType[user.role_id] }}</td>
                                 <td>{{ user.created_at }}</td>
 								<td>
 									<Button type="info" size='small' @click='showEditModal(user, i)'>Edit</Button>
@@ -54,9 +54,8 @@
                     <Input type='password' v-model="data.password" placeholder="Enter password..." />
                     <br/>
                     User type:
-                    <Select v-model="data.userType" placeholder='Chooese user type'>
-                        <Option value="admin">Admin</Option>
-                        <Option value="editor">Editor</Option>
+                    <Select v-model="data.role_id" placeholder='Chooese user type'>
+                        <Option :value='role.id' v-for='(role, i) in roles' :key='i' v-if='roles.length'>{{role.roleName}}</Option>
                     </Select>
 					<div slot='footer'>
 						<Button type='default' @click="addModal=false" >Close</Button>
@@ -82,9 +81,8 @@
                     <Input type='password' v-model="editData.password" placeholder="Enter password..." />
                     <br/>
                     User type:
-                    <Select v-model="editData.userType" placeholder='Chooese user type'>
-                        <Option value="admin">Admin</Option>
-                        <Option value="editor">Editor</Option>
+                    <Select v-model="editData.role_id" placeholder='Chooese user type'>
+                        <Option :value='role.id' v-for='(role, i) in roles' :key='i' v-if='roles.length'>{{role.roleName}}</Option>
                     </Select>
 
 					<div slot='footer'>
@@ -122,13 +120,15 @@ export default {
 				fullName: '',
                 email: '',
                 password: '',
-                userType: 'admin'
+                role_id: null
 			},
 			addModal: false,
 			editModal: false,
 			isAdding: false,
 			isDeleting: false,
 			users: [],
+			roles: [],
+			userType: [],
 			editData: {
 				tagName: ''
 			},
@@ -144,7 +144,7 @@ export default {
 			if (this.data.fullName.trim() == '')  this.error('Admin name is required');
             if (this.data.email.trim() == '')  this.error('Email is required');
             if (this.data.password.trim() == '') return this.error('Password is required');
-            if (this.data.userType.trim() == '') return  this.error('Type admin is required');
+            if (!this.data.role_id) return  this.error('Type admin is required');
 			const res = await this.callApi('POST', 'app/create_user', this.data);
 			if (res.status === 201) {
 				this.users.unshift(res.data);
@@ -167,7 +167,7 @@ export default {
 		async editAdmin () {
 			if (this.editData.fullName.trim() == '')  this.error('Admin name is required');
             if (this.editData.email.trim() == '') return this.error('Email is required');
-            if (this.editData.userType.trim() == '') return  this.error('Type admin is required');
+            if (!this.editData.role_id) return  this.error('Type admin is required');
 			const res = await this.callApi('POST', 'app/edit_user', this.editData);
 			if (res.status === 200) {
 				this.users[this.index] = this.editData; 
@@ -188,7 +188,7 @@ export default {
 				id: user.id,
 				fullName: user.fullName,
 				email: user.email,
-				userType: user.userType
+				role_id: user.role_id
 			}
 
 			this.index = index;
@@ -224,12 +224,28 @@ export default {
 		}
 	},
 	async created() {
-		const res = await this.callApi('GET', 'app/get_users');
+		const [res, resRole] = await Promise.all([
+			this.callApi('GET', 'app/get_users'),
+			this.callApi('GET', 'app/get_roles')
+		]);
 		if (res.status === 200) {
 			this.users = res.data;
 		} else {
 			this.swr(); 
 		}
+
+		if (resRole.status === 200) {
+			this.roles = resRole.data;
+		} else {
+			this.swr(); 
+		}
+
+		let userType = [];
+		for (let index in resRole.data) {
+			userType[resRole.data[index].id] = resRole.data[index].roleName;
+		}
+
+		this.userType = userType;
 	},
 	components: {
 		deleteModal

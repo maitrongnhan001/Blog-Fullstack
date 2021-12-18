@@ -5712,14 +5712,24 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-//
-//
 //
 //
 //
@@ -5841,13 +5851,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         fullName: '',
         email: '',
         password: '',
-        userType: 'admin'
+        role_id: null
       },
       addModal: false,
       editModal: false,
       isAdding: false,
       isDeleting: false,
       users: [],
+      roles: [],
+      userType: [],
       editData: {
         tagName: ''
       },
@@ -5879,7 +5891,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _context.abrupt("return", _this.error('Password is required'));
 
               case 4:
-                if (!(_this.data.userType.trim() == '')) {
+                if (_this.data.role_id) {
                   _context.next = 6;
                   break;
                 }
@@ -5942,7 +5954,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _context2.abrupt("return", _this2.error('Email is required'));
 
               case 3:
-                if (!(_this2.editData.userType.trim() == '')) {
+                if (_this2.editData.role_id) {
                   _context2.next = 5;
                   break;
                 }
@@ -5987,7 +5999,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         id: user.id,
         fullName: user.fullName,
         email: user.email,
-        userType: user.userType
+        role_id: user.role_id
       };
       this.index = index;
       this.editData = obj;
@@ -6045,16 +6057,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var _this4 = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
-      var res;
+      var _yield$Promise$all, _yield$Promise$all2, res, resRole, userType, index;
+
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
               _context4.next = 2;
-              return _this4.callApi('GET', 'app/get_users');
+              return Promise.all([_this4.callApi('GET', 'app/get_users'), _this4.callApi('GET', 'app/get_roles')]);
 
             case 2:
-              res = _context4.sent;
+              _yield$Promise$all = _context4.sent;
+              _yield$Promise$all2 = _slicedToArray(_yield$Promise$all, 2);
+              res = _yield$Promise$all2[0];
+              resRole = _yield$Promise$all2[1];
 
               if (res.status === 200) {
                 _this4.users = res.data;
@@ -6062,7 +6078,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this4.swr();
               }
 
-            case 4:
+              if (resRole.status === 200) {
+                _this4.roles = resRole.data;
+              } else {
+                _this4.swr();
+              }
+
+              userType = [];
+
+              for (index in resRole.data) {
+                userType[resRole.data[index].id] = resRole.data[index].roleName;
+              }
+
+              _this4.userType = userType;
+
+            case 11:
             case "end":
               return _context4.stop();
           }
@@ -31319,6 +31349,16 @@ module.exports = function (list, options) {
     lastIdentifiers = newLastIdentifiers;
   };
 };
+
+/***/ }),
+
+/***/ "./node_modules/v-switch-case/dist/v-switch.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/v-switch-case/dist/v-switch.js ***!
+  \*****************************************************/
+/***/ ((module) => {
+
+module.exports=function(t){var e={};function n(r){if(e[r])return e[r].exports;var i=e[r]={i:r,l:!1,exports:{}};return t[r].call(i.exports,i,i.exports,n),i.l=!0,i.exports}return n.m=t,n.c=e,n.d=function(t,e,r){n.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:r})},n.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},n.t=function(t,e){if(1&e&&(t=n(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var i in t)n.d(r,i,function(e){return t[e]}.bind(null,i));return r},n.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(e,"a",e),e},n.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},n.p="",n(n.s=0)}([function(t,e,n){"use strict";n.r(e),n.d(e,"containsDirective",function(){return o}),n.d(e,"vSwitch",function(){return s}),n.d(e,"vCase",function(){return f}),n.d(e,"vDefault",function(){return p});const r={};function i(t,e){t[e.expression]=e.value}function o(t=[],e){for(let n in t)if(t[n].name===e)return t[n];return!1}const u=(t=[])=>o(t,"case"),l=(t=[])=>o(t,"default");function a(t,e,{show:n}){const r=e.children;for(let t of r)if(t.data&&l(t.data.directives)){const e=n?t.elm.getAttribute("data-initial-display"):"none";t.elm.style.display=e}}function c(t){const e=t.getAttribute("data-initial-display");t.style.display="none"!==e?e:"block"}function d(t,e,n,r){let i=!1;const o=n.children;for(let t of o)if(t.data){const o=u(t.data.directives,"case");o&&(o.value===r[e.expression]?(c(t.elm),a(0,n,{show:!1}),i=!0):t.elm.style.display="none")}i||a(0,n,{show:!0})}const s={bind(t,e){i(r,e)},inserted(t,e,n){!function(t){for(let e of t)e.setAttribute("data-initial-display",e.style.display)}(t.children),d(0,e,n,r)},update(t,e){i(r,e)},componentUpdated(t,e,n){d(0,e,n,r)}},f=()=>{},p=()=>{};e.default={install(t,e){t.directive("switch",s),t.directive("case",f),t.directive("default",p)}}}]);
 
 /***/ }),
 
@@ -78410,7 +78450,9 @@ var render = function () {
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(user.email))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(user.userType))]),
+                            _c("td", [
+                              _vm._v(_vm._s(_vm.userType[user.role_id])),
+                            ]),
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(user.created_at))]),
                             _vm._v(" "),
@@ -78521,22 +78563,20 @@ var render = function () {
                 {
                   attrs: { placeholder: "Chooese user type" },
                   model: {
-                    value: _vm.data.userType,
+                    value: _vm.data.role_id,
                     callback: function ($$v) {
-                      _vm.$set(_vm.data, "userType", $$v)
+                      _vm.$set(_vm.data, "role_id", $$v)
                     },
-                    expression: "data.userType",
+                    expression: "data.role_id",
                   },
                 },
-                [
-                  _c("Option", { attrs: { value: "admin" } }, [
-                    _vm._v("Admin"),
-                  ]),
-                  _vm._v(" "),
-                  _c("Option", { attrs: { value: "editor" } }, [
-                    _vm._v("Editor"),
-                  ]),
-                ],
+                _vm._l(_vm.roles, function (role, i) {
+                  return _vm.roles.length
+                    ? _c("Option", { key: i, attrs: { value: role.id } }, [
+                        _vm._v(_vm._s(role.roleName)),
+                      ])
+                    : _vm._e()
+                }),
                 1
               ),
               _vm._v(" "),
@@ -78640,22 +78680,20 @@ var render = function () {
                 {
                   attrs: { placeholder: "Chooese user type" },
                   model: {
-                    value: _vm.editData.userType,
+                    value: _vm.editData.role_id,
                     callback: function ($$v) {
-                      _vm.$set(_vm.editData, "userType", $$v)
+                      _vm.$set(_vm.editData, "role_id", $$v)
                     },
-                    expression: "editData.userType",
+                    expression: "editData.role_id",
                   },
                 },
-                [
-                  _c("Option", { attrs: { value: "admin" } }, [
-                    _vm._v("Admin"),
-                  ]),
-                  _vm._v(" "),
-                  _c("Option", { attrs: { value: "editor" } }, [
-                    _vm._v("Editor"),
-                  ]),
-                ],
+                _vm._l(_vm.roles, function (role, i) {
+                  return _vm.roles.length
+                    ? _c("Option", { key: i, attrs: { value: role.id } }, [
+                        _vm._v(_vm._s(role.roleName)),
+                      ])
+                    : _vm._e()
+                }),
                 1
               ),
               _vm._v(" "),
@@ -96877,13 +96915,15 @@ var __webpack_exports__ = {};
   !*** ./resources/js/app.js ***!
   \*****************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
 /* harmony import */ var _router_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./router.js */ "./resources/js/router.js");
 /* harmony import */ var view_design__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! view-design */ "./node_modules/view-design/dist/iview.js");
 /* harmony import */ var view_design__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(view_design__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _store_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./store.js */ "./resources/js/store.js");
 /* harmony import */ var view_design_dist_styles_iview_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! view-design/dist/styles/iview.css */ "./node_modules/view-design/dist/styles/iview.css");
 /* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./common.js */ "./resources/js/common.js");
+/* harmony import */ var v_switch_case__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! v-switch-case */ "./node_modules/v-switch-case/dist/v-switch.js");
+/* harmony import */ var v_switch_case__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(v_switch_case__WEBPACK_IMPORTED_MODULE_5__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
@@ -96892,10 +96932,12 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_5__["default"].use((view_design__WEBPACK_IMPORTED_MODULE_1___default()));
-vue__WEBPACK_IMPORTED_MODULE_5__["default"].mixin(_common_js__WEBPACK_IMPORTED_MODULE_4__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_5__["default"].component('mainapp', (__webpack_require__(/*! ./components/mainapp.vue */ "./resources/js/components/mainapp.vue")["default"]));
-var app = new vue__WEBPACK_IMPORTED_MODULE_5__["default"]({
+
+vue__WEBPACK_IMPORTED_MODULE_6__["default"].use((view_design__WEBPACK_IMPORTED_MODULE_1___default()));
+vue__WEBPACK_IMPORTED_MODULE_6__["default"].mixin(_common_js__WEBPACK_IMPORTED_MODULE_4__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_6__["default"].use((v_switch_case__WEBPACK_IMPORTED_MODULE_5___default()));
+vue__WEBPACK_IMPORTED_MODULE_6__["default"].component('mainapp', (__webpack_require__(/*! ./components/mainapp.vue */ "./resources/js/components/mainapp.vue")["default"]));
+var app = new vue__WEBPACK_IMPORTED_MODULE_6__["default"]({
   el: '#app',
   router: _router_js__WEBPACK_IMPORTED_MODULE_0__["default"],
   store: _store_js__WEBPACK_IMPORTED_MODULE_2__["default"]

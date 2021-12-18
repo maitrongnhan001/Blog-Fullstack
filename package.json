@@ -24,6 +24,7 @@
     },
     "dependencies": {
         "babel-preset-es2015": "^6.24.1",
+        "v-switch-case": "^1.0.3",
         "view-design": "^4.7.0",
         "vue": "^2.6.14",
         "vue-router": "^3.5.3",
