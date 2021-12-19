@@ -154,24 +154,12 @@ export default {
 			this.editData = obj;
 			this.editModal = true;
 		},
-		async deleteTag () {
-			this.isDeleting = true;
-			const res = await this.callApi('POST', 'app/delete_tag', this.deleteItem);
-			if (res.status === 200) {
-				this.tags.splice(this.indexDelete, 1);
-				this.success('Tag has been deleted successfully!');
-			} else {
-				this.swr();
-			}
-			this.showDeletingModal = false;
-			this.isDeleting = false;
-		},
-		showDeletingModal (tag, index) {
+		showDeletingModal (role, index) {
 			const deleteModalObj = {
-				title: 'tag',
+				title: 'role',
 				showDeleteModal: true,
-				deleteUrl: 'app/delete_tag',
-				data: tag,
+				deleteUrl: 'app/delete_role',
+				data: role,
 				isDeleted: false
 			}
 
@@ -199,7 +187,7 @@ export default {
 	watch: {
 		getDeleteModalObj(obj) {
 			if (obj.isDeleted) {
-				this.tags.splice(this.indexDelete, 1);
+				this.roles.splice(this.indexDelete, 1);
 			}
 		}
 	}

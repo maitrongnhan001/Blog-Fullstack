@@ -270,4 +270,14 @@ class AdminController extends Controller
 
         return $edit;
     }
+
+    public function deleteRole (Request $request) {
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        $delete = Role::where('id', $request->id)->delete();
+
+        return $delete;
+    }
 }
