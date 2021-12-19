@@ -7,33 +7,45 @@ import category from './admin/pages/category.vue';
 import adminUsers from './admin/pages/adminusers.vue';
 import role from './admin/pages/role.vue';
 import login from './admin/pages/login.vue';
+import assignRole from './admin/pages/assignRole';
 
 Vue.use(Router); 
 
 const routes = [
     {
         path: '/',
-        component: home
+        component: home,
+        name: 'home'
     },
     {
         path: '/login',
-        component: login
+        component: login,
+        name: 'login'
     },
     {
         path: '/tags',
-        component: tags
+        component: tags,
+        name: 'tags'
     },
     {
         path: '/category',
-        component: category
+        component: category,
+        name: 'category'
     },
     {
         path: '/adminusers',
-        component: adminUsers
+        component: adminUsers,
+        name: 'adminuser'
     },
     {
         path: '/role',
-        component: role
+        component: role,
+        name: 'role'
+    },
+    {
+        path: '/assignRole',
+        component: assignRole,
+        name: 'assignrole'
     }
 ];
 

@@ -10,6 +10,7 @@ use App\Models\User;
 use Facade\FlareClient\Http\Response;
 use GrahamCampbell\ResultType\Result;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Contracts\Service\Attribute\Required;
 
 class AdminController extends Controller
 {
@@ -279,5 +280,16 @@ class AdminController extends Controller
         $delete = Role::where('id', $request->id)->delete();
 
         return $delete;
+    }
+
+    public function assignRole (Request $request) {
+        $this->validate($request, [
+            'permission' => 'required',
+            'id' => 'required'
+        ]);
+
+        return Role::where('id', $request->id)->update([
+            'permission' =>$request->permission
+        ]);
     }
 }
