@@ -40,6 +40,10 @@ class AdminController extends Controller
         $permission = json_decode($user->role->permission);
 
         $hasPermission = false;
+        if (!$permission) {
+            return view('welcome');
+        }
+
         foreach($permission as $p) {
             if ($p->name == $request->path()) {
                 if ($p->read) {

@@ -67,7 +67,7 @@ export default {
             resources: [
                 {resourceName: 'Tags', read: false, write: false, update: false, delete: false, name: 'tags'},
                 {resourceName: 'Category', read: false, write: false, update: false, delete: false, name: 'category' },
-                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: 'home'},
+                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: '/'},
                 {resourceName: 'Adminuser', read: false, write: false, update: false, delete: false, name: 'adminuser'},
                 {resourceName: 'Role', read: false, write: false, update: false, delete: false, name: 'role'},
                 {resourceName: 'Assignrole', read: false, write: false, update: false, delete: false, name: 'assignrole'}
@@ -75,7 +75,7 @@ export default {
             defaultResources: [
                 {resourceName: 'Tags', read: false, write: false, update: false, delete: false, name: 'tags'},
                 {resourceName: 'Category', read: false, write: false, update: false, delete: false, name: 'category' },
-                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: 'home'},
+                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: '/'},
                 {resourceName: 'Adminuser', read: false, write: false, update: false, delete: false, name: 'adminuser'},
                 {resourceName: 'Role', read: false, write: false, update: false, delete: false, name: 'role'},
                 {resourceName: 'Assignrole', read: false, write: false, update: false, delete: false, name: 'assignrole'}
