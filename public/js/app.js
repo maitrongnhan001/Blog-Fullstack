@@ -6329,8 +6329,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    HandleClickRoleSelect: function HandleClickRoleSelect(e) {
-      var id = e.target.value;
+    HandleClickRoleSelect: function HandleClickRoleSelect(role_id) {
+      var id = role_id;
       var roles = this.roles;
       var index = roles.findIndex(function (role) {
         return role.id == id;
@@ -79184,56 +79184,41 @@ var render = function () {
               "_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20",
           },
           [
-            _c("p", { staticClass: "_title0" }, [
-              _vm._v("Role Management \n                        "),
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
+            _c(
+              "p",
+              { staticClass: "_title0" },
+              [
+                _vm._v("Role Management \n                        "),
+                _c(
+                  "Select",
+                  {
+                    staticStyle: { width: "300px" },
+                    attrs: { placeholder: "Chooese user type" },
+                    on: {
+                      "on-change": function ($event) {
+                        return _vm.HandleClickRoleSelect(_vm.data.role_id)
+                      },
+                    },
+                    model: {
                       value: _vm.data.role_id,
+                      callback: function ($$v) {
+                        _vm.$set(_vm.data, "role_id", $$v)
+                      },
                       expression: "data.role_id",
                     },
-                  ],
-                  staticStyle: { width: "300px" },
-                  attrs: { placeholder: "Chooese user type" },
-                  on: {
-                    change: [
-                      function ($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function (o) {
-                            return o.selected
-                          })
-                          .map(function (o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.data,
-                          "role_id",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      },
-                      function ($event) {
-                        return _vm.HandleClickRoleSelect($event)
-                      },
-                    ],
                   },
-                },
-                _vm._l(_vm.roles, function (role, i) {
-                  return _vm.roles.length
-                    ? _c("option", { key: i, domProps: { value: role.id } }, [
-                        _vm._v(_vm._s(role.roleName)),
-                      ])
-                    : _vm._e()
-                }),
-                0
-              ),
-            ]),
+                  _vm._l(_vm.roles, function (role, i) {
+                    return _vm.roles.length
+                      ? _c("Option", { key: i, attrs: { value: role.id } }, [
+                          _vm._v(_vm._s(role.roleName)),
+                        ])
+                      : _vm._e()
+                  }),
+                  1
+                ),
+              ],
+              1
+            ),
             _vm._v(" "),
             _c("div", { staticClass: "_overflow _table_div" }, [
               _c(

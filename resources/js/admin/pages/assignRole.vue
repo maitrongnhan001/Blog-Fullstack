@@ -6,9 +6,9 @@
 				<!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
 				<div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
 					<p class="_title0">Role Management 
-                        <select v-model="data.role_id" placeholder='Chooese user type' style='width:300px' @change='HandleClickRoleSelect($event)'>
-                            <option :value='role.id' v-for='(role, i) in roles' :key='i' v-if='roles.length'>{{role.roleName}}</option>
-                        </select>
+                        <Select v-model="data.role_id" placeholder='Chooese user type' style='width:300px' @on-change='HandleClickRoleSelect(data.role_id)'>
+                            <Option :value='role.id' v-for='(role, i) in roles' :key='i' v-if='roles.length'>{{role.roleName}}</Option>
+                        </Select>
                     </p>
 
 					<div class="_overflow _table_div">
@@ -96,8 +96,8 @@ export default {
                 this.swr();
             }
         },
-        HandleClickRoleSelect (e) {
-            const id = e.target.value;
+        HandleClickRoleSelect (role_id) {
+            const id = role_id;
             const roles = this.roles;
             const index = roles.findIndex(role => role.id == id);
             if (this.roles[index].permission) {
