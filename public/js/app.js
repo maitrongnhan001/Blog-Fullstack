@@ -6206,42 +6206,85 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         write: false,
         update: false,
         "delete": false,
-        name: 'Tags'
+        name: 'tags'
       }, {
         resourceName: 'Category',
         read: false,
         write: false,
         update: false,
         "delete": false,
-        name: 'Category'
+        name: 'category'
       }, {
         resourceName: 'Home',
         read: false,
         write: false,
         update: false,
         "delete": false,
-        name: 'Home'
+        name: 'home'
       }, {
         resourceName: 'Adminuser',
         read: false,
         write: false,
         update: false,
         "delete": false,
-        name: 'Adminuser'
+        name: 'adminuser'
       }, {
         resourceName: 'Role',
         read: false,
         write: false,
         update: false,
         "delete": false,
-        name: 'Role'
+        name: 'role'
       }, {
         resourceName: 'Assignrole',
         read: false,
         write: false,
         update: false,
         "delete": false,
-        name: 'Assignrole'
+        name: 'assignrole'
+      }],
+      defaultResources: [{
+        resourceName: 'Tags',
+        read: false,
+        write: false,
+        update: false,
+        "delete": false,
+        name: 'tags'
+      }, {
+        resourceName: 'Category',
+        read: false,
+        write: false,
+        update: false,
+        "delete": false,
+        name: 'category'
+      }, {
+        resourceName: 'Home',
+        read: false,
+        write: false,
+        update: false,
+        "delete": false,
+        name: 'home'
+      }, {
+        resourceName: 'Adminuser',
+        read: false,
+        write: false,
+        update: false,
+        "delete": false,
+        name: 'adminuser'
+      }, {
+        resourceName: 'Role',
+        read: false,
+        write: false,
+        update: false,
+        "delete": false,
+        name: 'role'
+      }, {
+        resourceName: 'Assignrole',
+        read: false,
+        write: false,
+        update: false,
+        "delete": false,
+        name: 'assignrole'
       }]
     };
   },
@@ -6270,13 +6313,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   _this.success('Role has been assign successfully!');
 
-                  for (index in roles) {
-                    if (roles[index].id == _this.data.role_id) {
-                      if (roles[index].permission) {
-                        _this.roles[index].permission = data;
-                      }
-                    }
-                  }
+                  index = roles.findIndex(function (role) {
+                    return role.id == _this.data.role_id;
+                  });
+                  _this.roles[index].permission = data;
                 } else {
                   _this.swr();
                 }
@@ -6292,13 +6332,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     HandleClickRoleSelect: function HandleClickRoleSelect(e) {
       var id = e.target.value;
       var roles = this.roles;
+      var index = roles.findIndex(function (role) {
+        return role.id == id;
+      });
 
-      for (var index in roles) {
-        if (roles[index].id == id) {
-          if (roles[index].permission) {
-            this.resources = JSON.parse(roles[index].permission);
-          }
-        }
+      if (this.roles[index].permission) {
+        this.resources = JSON.parse(this.roles[index].permission);
+      } else {
+        this.resources = this.defaultResources;
       }
     }
   },

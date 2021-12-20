@@ -65,12 +65,20 @@ export default {
 			roles: [],
             isSending: false,
             resources: [
-                {resourceName: 'Tags', read: false, write: false, update: false, delete: false, name: 'Tags'},
-                {resourceName: 'Category', read: false, write: false, update: false, delete: false, name: 'Category' },
-                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: 'Home'},
-                {resourceName: 'Adminuser', read: false, write: false, update: false, delete: false, name: 'Adminuser'},
-                {resourceName: 'Role', read: false, write: false, update: false, delete: false, name: 'Role'},
-                {resourceName: 'Assignrole', read: false, write: false, update: false, delete: false, name: 'Assignrole'}
+                {resourceName: 'Tags', read: false, write: false, update: false, delete: false, name: 'tags'},
+                {resourceName: 'Category', read: false, write: false, update: false, delete: false, name: 'category' },
+                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: 'home'},
+                {resourceName: 'Adminuser', read: false, write: false, update: false, delete: false, name: 'adminuser'},
+                {resourceName: 'Role', read: false, write: false, update: false, delete: false, name: 'role'},
+                {resourceName: 'Assignrole', read: false, write: false, update: false, delete: false, name: 'assignrole'}
+            ],
+            defaultResources: [
+                {resourceName: 'Tags', read: false, write: false, update: false, delete: false, name: 'tags'},
+                {resourceName: 'Category', read: false, write: false, update: false, delete: false, name: 'category' },
+                {resourceName: 'Home', read: false, write: false, update: false, delete: false, name: 'home'},
+                {resourceName: 'Adminuser', read: false, write: false, update: false, delete: false, name: 'adminuser'},
+                {resourceName: 'Role', read: false, write: false, update: false, delete: false, name: 'role'},
+                {resourceName: 'Assignrole', read: false, write: false, update: false, delete: false, name: 'assignrole'}
             ]
         }
 	},
@@ -82,13 +90,8 @@ export default {
             if (res.status === 200) {
                 const roles = this.roles;
                 this.success('Role has been assign successfully!');
-                for (let index in roles) {
-                if (roles[index].id == this.data.role_id) {
-                    if (roles[index].permission) {
-                        this.roles[index].permission = data;
-                    }
-                }
-            }
+                const index  = roles.findIndex(role => role.id == this.data.role_id);
+                this.roles[index].permission = data;
             } else {
                 this.swr();
             }
@@ -96,12 +99,11 @@ export default {
         HandleClickRoleSelect (e) {
             const id = e.target.value;
             const roles = this.roles;
-            for (let index in roles) {
-                if (roles[index].id == id) {
-                    if (roles[index].permission) {
-                        this.resources = JSON.parse(roles[index].permission);
-                    }
-                }
+            const index = roles.findIndex(role => role.id == id);
+            if (this.roles[index].permission) {
+                this.resources = JSON.parse(this.roles[index].permission);
+            } else {
+                this.resources = this.defaultResources;
             }
         }
     },

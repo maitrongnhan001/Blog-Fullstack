@@ -33,7 +33,26 @@ class AdminController extends Controller
             return redirect('/');
         }
 
-        return view('welcome');
+        return $this->checkForPermission($user, $request);
+    }
+
+    public function checkForPermission ($user, $request) {
+        $permission = json_decode($user->role->permission);
+
+        $hasPermission = false;
+        foreach($permission as $p) {
+            if ($p->name == $request->path()) {
+                if ($p->read) {
+                    $hasPermission = true;
+                }
+            }
+        }
+
+        if ($hasPermission) {
+            return view('welcome');
+        } else {
+            return view('notfound');
+        }
     }
 
     public function getTags () {
