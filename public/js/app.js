@@ -8045,6 +8045,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -8074,7 +8081,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     onSave: function onSave(respone) {},
-    save: function save() {}
+    save: function save() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _this.$ref.editor.save();
+
+              case 2:
+                res = _context2.sent;
+
+              case 3:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    }
   }
 });
 
@@ -81431,24 +81460,46 @@ var render = function () {
               1
             ),
             _vm._v(" "),
-            _c("editor", {
-              ref: "editor",
-              attrs: {
-                autofocus: "",
-                "holder-id": "codex-editor",
-                "save-button-id": "save-button",
-                "init-data": _vm.initData,
-              },
-              on: { save: _vm.onSave },
-            }),
+            _c(
+              "div",
+              { staticClass: "_overflow _table_div blog_editor" },
+              [
+                _c("editor", {
+                  ref: "editor",
+                  attrs: {
+                    autofocus: "",
+                    "holder-id": "codex-editor",
+                    "save-button-id": "save-button",
+                    "init-data": _vm.initData,
+                  },
+                  on: { save: _vm.onSave },
+                }),
+              ],
+              1
+            ),
             _vm._v(" "),
             _c(
-              "Button",
-              { attrs: { type: "primary" }, on: { click: _vm.save } },
-              [_vm._v("Save")]
+              "div",
+              { staticClass: "_input_field" },
+              [_c("Input", { attrs: { type: "text", placeholder: "title" } })],
+              1
             ),
-          ],
-          1
+            _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "_input_field" },
+              [
+                _c(
+                  "Button",
+                  { attrs: { type: "primary" }, on: { click: _vm.save } },
+                  [_vm._v("Save")]
+                ),
+              ],
+              1
+            ),
+          ]
         ),
       ]),
     ]),
