@@ -8,7 +8,7 @@
         >
           <p class="_title0">
             Category
-            <Button @click="addModal = true"> <Icon type="md-add" /> Add category</Button>
+            <Button @click="addModal = true" v-if='isWritePermitted'> <Icon type="md-add"/> Add category</Button>
           </p>
 
           <div class="_overflow _table_div">
@@ -34,7 +34,7 @@
                 </td>
                 <td class="_table_name">{{ category.categoryName }}</td>
                 <td>
-                  <Button type="info" size="small" @click="showEditModal(category, i)"
+                  <Button type="info" size="small" @click="showEditModal(category, i)" v-if='isUpdatePermitted'
                     >Edit</Button
                   >
                   <Button
@@ -42,6 +42,7 @@
                     size="small"
                     @click="showDeletingModal(category, i)"
                     :loading="category.isDeleting"
+                    v-if='isDeletePermitted'
                     >Delete</Button
                   >
                 </td>
