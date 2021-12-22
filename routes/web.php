@@ -63,3 +63,5 @@ Route::group(['prefix' =>'app', 'middleware' => [AdminCheck::class]] ,function (
 
     Route::post('/assign_roles', [AdminController::class, 'assignRole']);
 });
+
+Route::post('/create-blog', [AdminController::class, 'uploadEditorImage']);
