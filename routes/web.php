@@ -62,6 +62,41 @@ Route::group(['prefix' =>'app', 'middleware' => [AdminCheck::class]] ,function (
     Route::post('/delete_role', [AdminController::class, 'deleteRole']);
 
     Route::post('/assign_roles', [AdminController::class, 'assignRole']);
+
+    //  roles routes
+    Route::post('create_role', 'AdminController@addRole');
+
+    Route::get('get_roles', 'AdminController@getRoles');
+    
+    Route::post('edit_role', 'AdminController@editRole');
+    
+    Route::post('assign_roles', 'AdminController@assignRole');
+
+
+    // blog
+
+    Route::post('create-blog', 'AdminController@createBlog');
+    
+    Route::get('blogsdata', 'AdminController@blogdata'); // get the blogs item
+    
+    Route::post('delete_blog', 'AdminController@deleteBlog');
+    
+    Route::get('blog_single/{id}', 'AdminController@singleBlogItem');
+    
+    Route::post('update_blog/{id}', 'AdminController@updateBlog');
+
 });
 
 Route::post('/create-blog', [AdminController::class, 'uploadEditorImage']);
+
+Route::get('slug','AdminController@slug');
+
+Route::get('blogdata', 'AdminController@blogdata');
+
+
+
+Route::get('/logout', 'AdminController@logout');
+
+Route::get('/', 'AdminController@index');
+
+Route::any('{slug}', 'AdminController@index')->where('slug', '([A-z\d-\/_.]+)?');
